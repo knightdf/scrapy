@@ -17,5 +17,6 @@ def extra_post_id(url):
     if m:
         return m.group(1)
 
+#remove html tags in body
 def extra_content(body):
     return html.fromstring(body).text_content().strip()

@@ -87,43 +87,55 @@ class BBCPipeline(object):
                 {'host':'222.73.215.251', 'port':9200}
             ])
         mapping = {
-                self.index_name: {
-                    'properties': {
-                        'title': {
-                            'type': 'string',
-                            'store': 'yes'
-                            },
-                        'url': {
-                            'type': 'string',
-                            'store': 'yes'
-                            },
-                        'content': {
-                            'type': 'string',
-                            'store': 'yes'
-                            },
-                        'posttime': {
-                            'type': 'string',
-                            },
-                        'postid': {
-                            'type': 'integer',
-                            },
-                        'type': {
-                            'type': 'string',
-                            },
-                        'timestamp': {
-                            'type': 'date',
+                'mappings':{
+                    self.index_name: {
+                        'properties': {
+                            'title': {
+                                'type': 'string',
+                                'store': True,
+                                'index': 'analyzed'
+                                },
+                            'url': {
+                                'type': 'string',
+                                'store': True
+                                },
+                            'content': {
+                                'type': 'string',
+                                'store': True,
+                                'index': 'analyzed'
+                                },
+                            'posttime': {
+                                'type': 'string',
+                                'null_value': ''
+                                },
+                            'postid': {
+                                'type': 'integer',
+                                'null_value': ''
+                                },
+                            'type': {
+                                'type': 'string',
+                                },
+                            'timestamp': {
+                                'type': 'date',
+                                },
+                            'keywords': {
+                                'type': 'string',
+                                'store': True,
+                                'index': 'analyzed',
+                                'null_value': ''
+                                }
                             }
                         }
                     }
                 }
 
-        self.es.indices.create(index=self.index_name, ignore=400)
+        self.es.indices.create(index=self.index_name, body=mapping, ignore=400)
 
     def process_item(self, item, spider):
         if spider.name != 'bbc':
             return item
         try:
-            if not item['title'] and item['content']:
+            if not (item['postId'] and item['channel'] and item['title'] and item['content']):
                 raise DropItem('missing title or content in %s'%item)
         except:
             raise DropItem('missing title or content in %s'%item)
