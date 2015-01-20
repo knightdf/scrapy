@@ -1,5 +1,6 @@
 import re
 from lxml import html
+from scrapy import log
 
 def extra_channel(url):
     if not url:
@@ -19,4 +20,8 @@ def extra_post_id(url):
 
 #remove html tags in body
 def extra_content(body):
-    return html.fromstring(body).text_content().strip()
+    body = re.sub(r"<script[^>]*?>[\s\S]*?</script>", "", body)
+    body = re.sub(r"<style[^>]*?>[\s\S]*?</style>", "", body)
+    body = html.fromstring(body).text_content().strip()
+    log.msg(body)
+    return body

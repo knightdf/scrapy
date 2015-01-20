@@ -9,6 +9,7 @@ from datetime import datetime
 from elasticsearch import Elasticsearch
 from scrapy import log
 from scrapy.exceptions import DropItem
+from hashlib import md5
 
 class TutorialPipeline(object):
     def process_item(self, item, spider):
@@ -162,3 +163,71 @@ class BBCPipeline(object):
 
     def close_spider(self, spider):
         self.es.indices.refresh(index=self.index_name)
+
+class BroadPipeline(object):
+    def __init__(self):
+        self.index_name = 'bilintest'
+        self.doc_type = 'url'
+        self.es = Elasticsearch([
+                {'host':'222.73.215.251', 'port':9200}
+            ])
+
+        mapping = {
+                'mappings':{
+                    self.index_name: {
+                        'properties': {
+                            'title': {
+                                'type': 'string',
+                                'store': True,
+                                'index': 'analyzed'
+                                },
+                            'url': {
+                                'type': 'string',
+                                'store': True
+                                },
+                            'content': {
+                                'type': 'string',
+                                'store': True,
+                                'index': 'analyzed'
+                                },
+                            'timestamp': {
+                                'type': 'date',
+                                },
+                            'keywords': {
+                                'type': 'string',
+                                'store': True,
+                                'index': 'analyzed',
+                                'null_value': ''
+                                }
+                            }
+                        }
+                    }
+                }
+
+        self.es.indices.create(index=self.index_name, body=mapping, ignore=400)
+
+    def process_item(self, item, spider):
+        if spider.name != 'broad':
+            return item
+        try:
+            if not (item['body'] and item['url']):
+                raise DropItem('missing title or content in %s'%item)
+        except:
+            raise DropItem('missing title or content in %s'%item)
+
+        doc = {
+                'title': item['title'],
+                'url': item['url'],
+                'content': item['body'],
+                'keywords': item['keywords'],
+                'timestamp': datetime.utcnow()
+                }
+
+        res = self.es.index(
+                index=self.index_name,
+                doc_type = self.doc_type,
+                id = md5(item['url']).hexdigest(),
+                body = doc
+                )
+
+        return item
