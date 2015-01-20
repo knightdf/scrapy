@@ -8,6 +8,9 @@
 #     http://doc.scrapy.org/en/latest/topics/settings.html
 #
 
+ES_IP = '222.73.215.251'
+ES_PORT = 9200
+
 BOT_NAME = 'tutorial'
 
 SPIDER_MODULES = ['tutorial.spiders']

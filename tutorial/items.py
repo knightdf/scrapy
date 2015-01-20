@@ -50,3 +50,11 @@ class BroadItem(scrapy.Item):
     keywords = scrapy.Field()
     url = scrapy.Field()
     body = scrapy.Field()
+
+    def __getitem__(self, key):
+        try:
+            super(BroadItem, self).__getitem__(key)
+        except KeyError:
+            return None
+
+
