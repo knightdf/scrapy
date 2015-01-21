@@ -9,9 +9,12 @@
 #
 
 ES_HOST = [
-        {'host':'222.73.215.220', 'port': 9200},
-        {'host':'222.73.215.251', 'port': 9200},
+    {'host':'222.73.215.220', 'port': 9200},
+    {'host':'222.73.215.251', 'port': 9200},
 ]
+
+#PROXY_ADDR = ''
+#PROXY_PASS = ''
 
 BOT_NAME = 'tutorial'
 
@@ -21,8 +24,8 @@ NEWSPIDER_MODULE = 'tutorial.spiders'
 #some sane limits by default
 CLOSESPIDER_PAGECOUNT = 1000
 CLOSESPIDER_TIMEOUT = 3600
-CONCURRENT_REQUESTS = 100
-DOWNLOAD_TIMEOUT = 15
+CONCURRENT_REQUESTS = 4
+DOWNLOAD_TIMEOUT = 60
 
 RETRY_ENABLED = False
 COOKIES_ENABLED = False
@@ -69,7 +72,7 @@ USER_AGENTS = [
 ]
 
 DOWNLOADER_MIDDLEWARES = {
-    'tutorial.middleware.RandomUserAgent': 1,
+    'tutorial.middleware.RandomUserAgent': 2,
 }
 
 ITEM_PIPELINES = {
@@ -79,4 +82,6 @@ ITEM_PIPELINES = {
     'tutorial.pipelines.BBCPipeline':100,
 }
 
-LOG_LEVEL = 'DEBUG'
+LOG_LEVEL = 'INFO'
+
+STATS_DUMP = False

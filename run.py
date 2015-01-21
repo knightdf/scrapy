@@ -6,6 +6,8 @@ from tutorial.spiders.broad_spider import BroadSpider
 from exceptions import IOError
 import os
 
+reactor.suggestThreadPoolSize(30)
+
 class manager(object):
     spiderCount = 0
 
