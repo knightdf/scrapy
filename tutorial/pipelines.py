@@ -173,45 +173,42 @@ class BroadPipeline(object):
             ])
 
         mapping = {
-                'mappings':{
-                    self.index_name: {
-                        'properties': {
-                            'title': {
-                                'type': 'string',
-                                'store': True,
-                                'index': 'analyzed'
-                                },
-                            'url': {
-                                'type': 'string',
-                                'store': True
-                                },
-                            'content': {
-                                'type': 'string',
-                                'store': True,
-                                'index': 'analyzed'
-                                },
-                            'timestamp': {
-                                'type': 'date',
-                                },
-                            'keywords': {
-                                'type': 'string',
-                                'store': True,
-                                'index': 'analyzed',
-                                'null_value': ''
-                                }
+                self.index_name: {
+                    'properties': {
+                        'title': {
+                            'type': 'string',
+                            'store': True,
+                            'index': 'analyzed'
+                            },
+                        'url': {
+                            'type': 'string',
+                            'store': True
+                            },
+                        'content': {
+                            'type': 'string',
+                            'store': True,
+                            'index': 'analyzed'
+                            },
+                        'timestamp': {
+                            'type': 'date',
+                            },
+                        'keywords': {
+                            'type': 'string',
+                            'store': True,
+                            'index': 'analyzed'
                             }
                         }
                     }
                 }
 
-        self.es.indices.create(index=self.index_name, body=mapping, ignore=400)
+        self.es.indices.create(index=self.index_name, ignore=400)
 
     def process_item(self, item, spider):
         if spider.name != 'broad':
             return item
         try:
             if not (item['body'] and item['url']):
-                raise DropItem('missing title or content in %s'%item)
+                raise DropItem('missing content or url in %s'%item)
         except:
             raise DropItem('missing title or content in %s'%item)
 

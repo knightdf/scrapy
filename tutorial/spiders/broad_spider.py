@@ -1,6 +1,7 @@
 from scrapy.spider import Spider
 from tutorial.items import BroadItem
 from tutorial.itemloaders import BroadItemLoader
+from scrapy.log import log
 
 class BroadSpider(Spider):
     name = 'broad'

@@ -41,7 +41,7 @@ class BBCItem(scrapy.Item):
 
     def __getitem__(self, key):
         try:
-            super(BBCItem, self).__getitem__(key)
+            return super(BBCItem, self).__getitem__(key)
         except KeyError:
             return None
 
@@ -53,8 +53,6 @@ class BroadItem(scrapy.Item):
 
     def __getitem__(self, key):
         try:
-            super(BroadItem, self).__getitem__(key)
+            return super(BroadItem, self).__getitem__(key)
         except KeyError:
             return None
-
-

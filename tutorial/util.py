@@ -22,6 +22,6 @@ def extra_post_id(url):
 def extra_content(body):
     body = re.sub(r"<script[^>]*?>[\s\S]*?</script>", "", body)
     body = re.sub(r"<style[^>]*?>[\s\S]*?</style>", "", body)
+    body = re.sub(r"\s+?","", body)
     body = html.fromstring(body).text_content().strip()
-    log.msg(body)
     return body
