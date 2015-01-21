@@ -9,6 +9,7 @@ from datetime import datetime
 from elasticsearch import Elasticsearch
 from scrapy import log
 from scrapy.exceptions import DropItem
+from scrapy.utils.project import get_project_settings
 from hashlib import md5
 
 class TutorialPipeline(object):
@@ -168,9 +169,8 @@ class BroadPipeline(object):
     def __init__(self):
         self.index_name = 'bilintest'
         self.doc_type = 'url'
-        self.es = Elasticsearch([
-                {'host':'222.73.215.251', 'port':9200}
-            ])
+        settings = get_project_settings()
+        self.es = Elasticsearch(settings.getlist('ES_HOST'))
 
         mapping = {
                 self.index_name: {

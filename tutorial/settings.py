@@ -8,8 +8,10 @@
 #     http://doc.scrapy.org/en/latest/topics/settings.html
 #
 
-ES_IP = '222.73.215.251'
-ES_PORT = 9200
+ES_HOST = [
+        {'host':'222.73.215.220', 'port': 9200},
+        {'host':'222.73.215.251', 'port': 9200},
+]
 
 BOT_NAME = 'tutorial'
 
@@ -77,4 +79,4 @@ ITEM_PIPELINES = {
     'tutorial.pipelines.BBCPipeline':100,
 }
 
-LOG_LEVEL = 'INFO'
+LOG_LEVEL = 'DEBUG'
