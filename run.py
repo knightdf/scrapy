@@ -4,6 +4,7 @@ from scrapy import log, signals
 from scrapy.utils.project import get_project_settings
 from tutorial.spiders.broad_spider import BroadSpider
 from exceptions import IOError
+from multiprocessing import Process
 import os
 
 reactor.suggestThreadPoolSize(30)
@@ -21,14 +22,11 @@ class manager(object):
         crawler.crawl(spider)
         crawler.start()
 
-    def setupSpider(self, path):
-        if os.path.exists(path):
-            for line in open(path):
-                spider = BroadSpider(url=line)
-                self.setupCrawler(spider)
-                self.spiderCount += 1
-        else:
-            raise IOError('path not exists')
+    def setupSpider(self, url):
+        if url is not None:
+            spider = BroadSpider(url=url)
+            self.setupCrawler(spider)
+            self.spiderCount += 1
 
     def spiderClosed(self):
         self.spiderCount -= 1
@@ -36,10 +34,22 @@ class manager(object):
             reactor.stop()
 
     def run(self):
-        if self.path is not None:
-            self.setupSpider(self.path)
+        if self.path is not None and os.path.exists(self.path):
+            #the given path is a url list file
+            if os.path.isfile(self.path):
+                for line in open(self.path):
+                    self.setupSpider(line)
+            #the given path is a dir including multi url_list
+            elif os.path.isdir(self.path):
+                for file in os.listdir(self.path):
+                    filepath = os.path.join(self.path, file)
+                    if os.path.isfile(filepath):
+                        for line in open(filepath):
+                            self.setupSpider(line)
             log.start()
             reactor.run()
+        else:
+            raise IOError('url list path not found!')
 
 if __name__ == '__main__':
     manager = manager(path='/tmp/url_list')
