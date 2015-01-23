@@ -27,12 +27,22 @@ CLOSESPIDER_TIMEOUT = 3600
 CONCURRENT_REQUESTS = 4
 DOWNLOAD_TIMEOUT = 60
 
+#retry request
 RETRY_ENABLED = False
 COOKIES_ENABLED = False
-#REDIRECT_ENABLED = False
+#http request redirect enable
+REDIRECT_ENABLED = True
+#max redirect times pre request
+REDIRECT_MAX_TIMES = 1
+#crawl ajax content
 AJAXCRAWL_ENABLED = True
 
+#close telnet console
 TELNETCONSOLE_ENABLED = False
+#close web service
+WEBSERVICE_ENABLED = False
+#close stats dump after crawl
+STATS_DUMP = False
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
 #USER_AGENT = 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36'
@@ -83,5 +93,3 @@ ITEM_PIPELINES = {
 }
 
 LOG_LEVEL = 'INFO'
-
-STATS_DUMP = False
