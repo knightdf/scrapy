@@ -55,8 +55,8 @@ class manager(object):
         starting crawl
         """
         self.setupSpider(url_list)
-        #log.start()
-        #reactor.run()
+        log.start()
+        reactor.run()
 
     def readLines(self, line_count=1000):
         """
