@@ -92,4 +92,4 @@ ITEM_PIPELINES = {
     'tutorial.pipelines.BBCPipeline':100,
 }
 
-LOG_LEVEL = 'INFO'
+LOG_LEVEL = 'DEBUG'

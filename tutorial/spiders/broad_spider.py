@@ -7,11 +7,16 @@ class BroadSpider(Spider):
     name = 'broad'
 
     def __init__(self, **kw):
+        """
+        BroadSpider can be initilized either by a single url(take first) or a url list
+        """
         super(BroadSpider, self).__init__(**kw)
         url = kw.get('url')
-        if not (url.startswith('http://') or url.startswith('https://')):
-            url = 'http://%s'%url
-        self.start_urls = [url]
+        url_list = kw.get('url_list')
+        if url != None:
+            self.start_urls = [url]
+        elif url_list != None:
+            self.start_urls = url_list
 
     def parse(self, response):
         broadItemLoader = BroadItemLoader(item=BroadItem(), response=response)
