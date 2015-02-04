@@ -1,6 +1,7 @@
 from multiprocessing.managers import BaseManager
 import time
 import os
+import re
 
 class MyManager(BaseManager):
     pass
@@ -10,6 +11,7 @@ MyManager.register('Queue')
 class UrlReader():
     """
     read urls to Queue
+    Note that it will move files that has been read to 'done' directory
     """
 
     def __init__(self, path, url_size=1000):
@@ -24,6 +26,13 @@ class UrlReader():
         server = mgr.connect()
         self._queue = mgr.Queue()
 
+    def decorate(self, url):
+        """
+        remove blanks in urls
+        """
+        #return re.sub(r'([^.])$', '', url)
+        return url.strip()
+
     def readLines(self):
         """
         a generator return @self._url_size lines from @self._path every time
@@ -34,7 +43,7 @@ class UrlReader():
             # the given path is a url list file
             if os.path.isfile(self._path):
                 for line in open(self._path, 'r'):
-                    res.append(line)
+                    res.append(self.decorate(line))
                     # return self._url_size lines
                     if len(res) >= self._url_size:
                         yield res
@@ -52,7 +61,7 @@ class UrlReader():
                     filepath = os.path.join(self._path, f)
                     if os.path.isfile(filepath):
                         for line in open(filepath, 'r'):
-                            res.append(line)
+                            res.append(self.decorate(line))
                             # return self._url_size lines
                             if len(res) >= self._url_size:
                                 yield res
