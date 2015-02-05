@@ -7,6 +7,7 @@ from exceptions import IOError
 from multiprocessing.managers import BaseManager
 import multiprocessing as mul
 import time
+import settings
 
 reactor.suggestThreadPoolSize(30)
 
@@ -23,11 +24,11 @@ class Manager(object):
         set up scrapy manager with using a @spider_count process pool
         """
         self._spider_count = spider_count
-        mgr = MyManager(address=('localhost', 12345), authkey='bilintechnology')
+        mgr = MyManager(address=(settings.PROXY_IP, settings.PROXY_PORT), authkey=settings.PROXY_AUTH)
         server = mgr.connect()
         self._queue = mgr.Queue()
         # due to a bug of python's manager/proxy, see `http://bugs.python.org/issue7503` for details
-        mul.current_process().authkey = 'bilintechnology'
+        mul.current_process().authkey = settings.PROXY_AUTH
 
     def setupCrawler(self,spider):
         crawler = Crawler(get_project_settings())
@@ -61,6 +62,7 @@ class Manager(object):
         """
         starting crawl
         """
+        #print(len(url_list))
         self.setupSpider(url_list)
         log.start()
         reactor.run()
@@ -78,5 +80,5 @@ class Manager(object):
 
 
 if __name__ == '__main__':
-    manager = Manager(spider_count=2)
+    manager = Manager(spider_count=settings.SPIDER_COUNT)
     manager.run()

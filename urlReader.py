@@ -2,6 +2,7 @@ from multiprocessing.managers import BaseManager
 import time
 import os
 import re
+import settings
 
 class MyManager(BaseManager):
     pass
@@ -22,7 +23,7 @@ class UrlReader():
         """
         self._path = path
         self._url_size = url_size
-        mgr = MyManager(address=('localhost', 12345), authkey='bilintechnology')
+        mgr = MyManager(address=(settings.PROXY_IP, settings.PROXY_PORT), authkey=settings.PROXY_AUTH)
         server = mgr.connect()
         self._queue = mgr.Queue()
 
@@ -93,5 +94,5 @@ class UrlReader():
                 break
 
 if __name__ == '__main__':
-    reader = UrlReader(path='/tmp/url_list', url_size=1000)
+    reader = UrlReader(path=settings.URL_LIST_PATH, url_size=settings.URL_SIZE)
     reader.toQueue()
