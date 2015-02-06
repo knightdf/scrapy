@@ -20,6 +20,7 @@ class TorrentPipeline(object):
     def __init__(self):
         self.index_name = 'mininova'
         self.doc_type = 'torrent'
+        settings = get_project_settings()
         self.es = Elasticsearch(settings.getlist('ES_HOST'))
         self.es.indices.create(index=self.index_name, ignore=400)
 
