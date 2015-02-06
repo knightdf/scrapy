@@ -44,7 +44,9 @@ class UrlReader():
             # the given path is a url list file
             if os.path.isfile(self._path):
                 for line in open(self._path, 'r'):
-                    res.append(self.decorate(line))
+                    line = self.decorate(line)
+                    if line is not None:
+                        res.append(line)
                     # return self._url_size lines
                     if len(res) >= self._url_size:
                         yield res
@@ -62,7 +64,9 @@ class UrlReader():
                     filepath = os.path.join(self._path, f)
                     if os.path.isfile(filepath):
                         for line in open(filepath, 'r'):
-                            res.append(self.decorate(line))
+                            line = self.decorate(line)
+                            if line is not None:
+                                res.append(line)
                             # return self._url_size lines
                             if len(res) >= self._url_size:
                                 yield res
