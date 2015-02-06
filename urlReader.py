@@ -31,8 +31,8 @@ class UrlReader():
         """
         remove blanks in urls
         """
-        #return re.sub(r'([^.])$', '', url)
-        return url.strip()
+        m = re.match(r'.*(https?://\S+)\s?.*', url)
+        return m and m.group(1)
 
     def readLines(self):
         """

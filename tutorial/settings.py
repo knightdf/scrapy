@@ -9,8 +9,7 @@
 #
 
 ES_HOST = [
-    {'host':'222.73.215.220', 'port': 9200},
-    {'host':'222.73.215.251', 'port': 9200},
+    {'host':'127.0.0.1', 'port': 9200},
 ]
 
 #PROXY_ADDR = ''
@@ -88,8 +87,6 @@ DOWNLOADER_MIDDLEWARES = {
 ITEM_PIPELINES = {
     'tutorial.pipelines.BroadPipeline':100,
     'tutorial.pipelines.TorrentPipeline':100,
-    'tutorial.pipelines.NewsPipeline':100,
-    'tutorial.pipelines.BBCPipeline':100,
 }
 
-LOG_LEVEL = 'DEBUG'
+LOG_LEVEL = 'INFO'

@@ -17,6 +17,12 @@ class TutorialPipeline(object):
         return item
 
 class TorrentPipeline(object):
+    def __init__(self):
+        self.index_name = 'mininova'
+        self.doc_type = 'torrent'
+        self.es = Elasticsearch(settings.getlist('ES_HOST'))
+        self.es.indices.create(index=self.index_name, ignore=400)
+
     def process_item(self, item, spider):
         if spider.name != 'torrents':
             return item
@@ -27,139 +33,14 @@ class TorrentPipeline(object):
                 'desc': item['desc'],
                 'timestamp': datetime.utcnow()
             }
-        es = Elasticsearch([
-                {'host':'222.73.215.251', 'port':9200},
-                {'host':'222.73.215.220', 'port':9200},
-            ])
-        es.indices.create(index='mininova', ignore=400)
-        res = es.index(
-                index='mininova',
-                doc_type='link',
-                id=item['url'].split('/')[-1],
-                body=doc
-            )
-        es.indices.refresh(index='mininova')
-        log.msg(res['created'], level=log.INFO)
-        return item
-
-class NewsPipeline(object):
-    def __init__(self):
-        self.index_name = 'newsof2015'
-        self.es = Elasticsearch([
-                {'host':'222.73.215.251', 'port':9200},
-                {'host':'222.73.215.220', 'port':9200},
-            ])
-        self.es.indices.create(index=self.index_name, ignore=400)
-
-    def process_item(self, item, spider):
-        if spider.name != 'news':
-            return item
-        if not (item['title'] and item['content']):
-            raise DropItem('missing title or content in %s'%item)
-
-        doc = {
-                'title': item['title'] and item['title'][0] or '',
-                'url': item['url'],
-                'content': self.get_content(item),
-                'posttime': item['time'],
-                'source': item['source'] and item['source'][0] or '',
-                'type': item['_type'],
-                'timestamp': datetime.utcnow()
-            }
         res = self.es.index(
                 index=self.index_name,
-                doc_type=item['_type'] or 'news',
-                id=item['url'].split('/')[-1].split('.')[0],
+                doc_type=self.doc_type,
+                id=item['url'].split('/')[-1],
                 body=doc
             )
         self.es.indices.refresh(index=self.index_name)
         log.msg(res['created'], level=log.INFO)
-        return item
-
-    def get_content(self, item):
-        contents = ''
-        for content in item['content']:
-            contents += (content and content + '\r\n') or ''
-        return contents
-
-class BBCPipeline(object):
-    def __init__(self):
-        self.index_name = 'bbcnews'
-        self.es = Elasticsearch([
-                {'host':'222.73.215.251', 'port':9200}
-            ])
-        mapping = {
-                'mappings':{
-                    self.index_name: {
-                        'properties': {
-                            'title': {
-                                'type': 'string',
-                                'store': True,
-                                'index': 'analyzed'
-                                },
-                            'url': {
-                                'type': 'string',
-                                'store': True
-                                },
-                            'content': {
-                                'type': 'string',
-                                'store': True,
-                                'index': 'analyzed'
-                                },
-                            'posttime': {
-                                'type': 'string',
-                                'null_value': ''
-                                },
-                            'postid': {
-                                'type': 'integer',
-                                'null_value': ''
-                                },
-                            'type': {
-                                'type': 'string',
-                                },
-                            'timestamp': {
-                                'type': 'date',
-                                },
-                            'keywords': {
-                                'type': 'string',
-                                'store': True,
-                                'index': 'analyzed',
-                                'null_value': ''
-                                }
-                            }
-                        }
-                    }
-                }
-
-        self.es.indices.create(index=self.index_name, body=mapping, ignore=400)
-
-    def process_item(self, item, spider):
-        if spider.name != 'bbc':
-            return item
-        try:
-            if not (item['postId'] and item['channel'] and item['title'] and item['content']):
-                raise DropItem('missing title or content in %s'%item)
-        except:
-            raise DropItem('missing title or content in %s'%item)
-
-        doc = {
-                'title': item['title'],
-                'url': item['url'],
-                'content': item['content'],
-                'posttime': item['time'],
-                'postid': item['postId'],
-                'type': item['channel'],
-                'keywords': item['keywords'],
-                'timestamp': datetime.utcnow()
-                }
-
-        res = self.es.index(
-                index=self.index_name,
-                doc_type = item['channel'],
-                id = item['postId'],
-                body = doc
-                )
-
         return item
 
     def close_spider(self, spider):
@@ -168,7 +49,7 @@ class BBCPipeline(object):
 class BroadPipeline(object):
     def __init__(self):
         self.index_name = 'bilintest'
-        self.doc_type = 'url'
+        self.doc_type = 'page'
         settings = get_project_settings()
         self.es = Elasticsearch(settings.getlist('ES_HOST'))
 
@@ -210,7 +91,7 @@ class BroadPipeline(object):
             if not (item['body'] and item['url']):
                 raise DropItem('missing content or url in %s'%item)
         except:
-            raise DropItem('missing title or content in %s'%item)
+            raise DropItem('missing url or content in %s'%item)
 
         doc = {
                 'title': item['title'],

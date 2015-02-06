@@ -63,8 +63,9 @@ class Manager(object):
         starting crawl
         """
         #print(len(url_list))
-        self.setupSpider(url_list)
         log.start()
+        self.setupSpider(url_list)
+        # the script will block here until the spider_closed signal was sent
         reactor.run()
 
     def run(self):

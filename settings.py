@@ -3,7 +3,7 @@ settings for set up context engine
 """
 
 # path that store url list files
-URL_LIST_PATH = '/tmp/url_list'
+URL_LIST_PATH = '/yundisk/urls/'
 
 # url size of one spider, default to 1000
 URL_SIZE = 1000

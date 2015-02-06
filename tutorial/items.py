@@ -22,29 +22,6 @@ class TorrentItem(scrapy.Item):
     desc = scrapy.Field()
     size = scrapy.Field()
 
-class NewsItem(scrapy.Item):
-    title = scrapy.Field()
-    content = scrapy.Field()
-    time = scrapy.Field()
-    source = scrapy.Field()
-    url = scrapy.Field()
-    _type = scrapy.Field()
-
-class BBCItem(scrapy.Item):
-    keywords = scrapy.Field()
-    postId = scrapy.Field()
-    title = scrapy.Field()
-    content = scrapy.Field()
-    time = scrapy.Field()
-    url = scrapy.Field()
-    channel = scrapy.Field()
-
-    def __getitem__(self, key):
-        try:
-            return super(BBCItem, self).__getitem__(key)
-        except KeyError:
-            return None
-
 class BroadItem(scrapy.Item):
     title = scrapy.Field()
     keywords = scrapy.Field()
