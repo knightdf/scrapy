@@ -86,6 +86,8 @@ class UrlReader():
         put data to self._queue
         """
 
+        print('%s: Started reading urls to Queue'%time.ctime())
+
         f = self.readLines()
         while True:
             # wait until Queue is not full
@@ -94,7 +96,7 @@ class UrlReader():
             try:
                 self._queue.put(f.next())
             except StopIteration:
-                print('%s: Finished reading all files'%time.ctime())
+                print('%s: Finished reading all urls'%time.ctime())
                 break
 
 if __name__ == '__main__':
