@@ -94,7 +94,7 @@ class UrlReader():
             try:
                 self._queue.put(f.next())
             except StopIteration:
-                print('finished all files')
+                print('%s: Finished reading all files'%time.ctime())
                 break
 
 if __name__ == '__main__':

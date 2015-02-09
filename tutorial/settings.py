@@ -9,7 +9,7 @@
 #
 
 ES_HOST = [
-    {'host':'127.0.0.1', 'port': 9200},
+    {'host':'222.73.215.220', 'port': 9200},
 ]
 
 #PROXY_ADDR = ''
@@ -38,10 +38,12 @@ AJAXCRAWL_ENABLED = True
 
 #close telnet console
 TELNETCONSOLE_ENABLED = False
+# set listening port to None or 0 means dynamic port
+TELNETCONSOLE_PORT = 0
 #close web service
 WEBSERVICE_ENABLED = False
 #close stats dump after crawl
-STATS_DUMP = False
+STATS_DUMP = True
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
 #USER_AGENT = 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36'
